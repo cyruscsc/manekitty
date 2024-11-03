@@ -1,4 +1,4 @@
-import { ThemeToggle } from '@/components/theme'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 
 const page = () => {
   return (

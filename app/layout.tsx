@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ThemeProvider } from '@/components/theme'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 import localFont from 'next/font/local'
 import './globals.css'
 
