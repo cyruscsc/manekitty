@@ -2,7 +2,7 @@ import { ThemeToggle } from '@/components/theme/theme-toggle'
 
 const page = () => {
   return (
-    <div>
+    <div className='h-[3000px]'>
       <ThemeToggle />
     </div>
   )

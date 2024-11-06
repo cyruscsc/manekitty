@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { routes } from '@/config/routes'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
@@ -44,7 +45,7 @@ export async function updateSession(request: NextRequest) {
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone()
-    url.pathname = '/auth'
+    url.pathname = routes.auth.href
     return NextResponse.redirect(url)
   }
 

@@ -37,7 +37,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className='max-w-6xl min-h-screen mx-auto'>{children}</main>
+            <main className='max-w-6xl min-h-screen mx-auto'>
+              {children}
+            </main>
           </ThemeProvider>
         </QueryProvider>
       </body>
