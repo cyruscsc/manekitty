@@ -9,12 +9,12 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      account: {
+      accounts: {
         Row: {
           color: string
           created_at: string
           id: string
-          is_net_worth: boolean
+          include_in_net_worth: boolean
           name: string
           type: Database["public"]["Enums"]["account_type"]
           user_id: string
@@ -23,7 +23,7 @@ export type Database = {
           color: string
           created_at?: string
           id?: string
-          is_net_worth: boolean
+          include_in_net_worth: boolean
           name: string
           type: Database["public"]["Enums"]["account_type"]
           user_id: string
@@ -32,243 +32,144 @@ export type Database = {
           color?: string
           created_at?: string
           id?: string
-          is_net_worth?: boolean
+          include_in_net_worth?: boolean
           name?: string
           type?: Database["public"]["Enums"]["account_type"]
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "account_user_id_fkey"
+            foreignKeyName: "accounts_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "profile"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
       }
-      category: {
-        Row: {
-          class_id: string
-          created_at: string
-          id: string
-          name: string
-        }
-        Insert: {
-          class_id: string
-          created_at?: string
-          id?: string
-          name: string
-        }
-        Update: {
-          class_id?: string
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "category_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "class"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      class: {
+      categories: {
         Row: {
           color: string
           created_at: string
           id: string
-          ledger_id: string
           name: string
+          parent_id: string | null
+          user_id: string
         }
         Insert: {
           color: string
           created_at?: string
           id?: string
-          ledger_id: string
           name: string
+          parent_id?: string | null
+          user_id: string
         }
         Update: {
           color?: string
           created_at?: string
           id?: string
-          ledger_id?: string
           name?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_ledger_id_fkey"
-            columns: ["ledger_id"]
-            isOneToOne: false
-            referencedRelation: "ledger"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ledger: {
-        Row: {
-          created_at: string
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
-      ledger_user: {
-        Row: {
-          created_at: string
-          ledger_id: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          ledger_id: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          ledger_id?: string
+          parent_id?: string | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "ledger_user_ledger_id_fkey"
-            columns: ["ledger_id"]
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
             isOneToOne: false
-            referencedRelation: "ledger"
+            referencedRelation: "categories"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "ledger_user_user_id_fkey"
+            foreignKeyName: "categories_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "profile"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
       }
-      profile: {
+      profiles: {
         Row: {
           created_at: string
+          currency: Database["public"]["Enums"]["currency"]
           display_name: string | null
           email: string
           id: string
-          invitation_code: string | null
+          theme: Database["public"]["Enums"]["theme"]
         }
         Insert: {
           created_at?: string
+          currency?: Database["public"]["Enums"]["currency"]
           display_name?: string | null
           email: string
           id: string
-          invitation_code?: string | null
+          theme?: Database["public"]["Enums"]["theme"]
         }
         Update: {
           created_at?: string
+          currency?: Database["public"]["Enums"]["currency"]
           display_name?: string | null
           email?: string
           id?: string
-          invitation_code?: string | null
+          theme?: Database["public"]["Enums"]["theme"]
         }
         Relationships: []
       }
-      settings: {
-        Row: {
-          created_at: string
-          currency: string | null
-          default_ledger_id: string | null
-          id: string
-          language: string | null
-          theme: string | null
-        }
-        Insert: {
-          created_at?: string
-          currency?: string | null
-          default_ledger_id?: string | null
-          id: string
-          language?: string | null
-          theme?: string | null
-        }
-        Update: {
-          created_at?: string
-          currency?: string | null
-          default_ledger_id?: string | null
-          id?: string
-          language?: string | null
-          theme?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "settings_default_ledger_id_fkey"
-            columns: ["default_ledger_id"]
-            isOneToOne: false
-            referencedRelation: "ledger"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "settings_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "profile"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      transaction: {
+      transactions: {
         Row: {
           account_id: string
-          amount: string
+          amount: number
           category_id: string
           created_at: string
           date: string
           id: string
           note: string | null
           type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
         }
         Insert: {
           account_id: string
-          amount: string
+          amount: number
           category_id: string
           created_at?: string
           date: string
           id?: string
           note?: string | null
           type: Database["public"]["Enums"]["transaction_type"]
+          user_id: string
         }
         Update: {
           account_id?: string
-          amount?: string
+          amount?: number
           category_id?: string
           created_at?: string
           date?: string
           id?: string
           note?: string | null
           type?: Database["public"]["Enums"]["transaction_type"]
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "transaction_account_id_fkey"
+            foreignKeyName: "transactions_account_id_fkey"
             columns: ["account_id"]
             isOneToOne: false
-            referencedRelation: "account"
+            referencedRelation: "accounts"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "transaction_category_id_fkey"
+            foreignKeyName: "transactions_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
-            referencedRelation: "category"
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -282,6 +183,8 @@ export type Database = {
     }
     Enums: {
       account_type: "spending" | "saving" | "credit" | "debt"
+      currency: "AUD" | "CAD" | "EUR" | "GBP" | "HKD" | "USD"
+      theme: "light" | "dark" | "system"
       transaction_type: "expense" | "income" | "transfer"
     }
     CompositeTypes: {

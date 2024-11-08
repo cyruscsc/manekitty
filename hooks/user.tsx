@@ -11,7 +11,7 @@ export const useUser = () => {
       const { data } = await supabase.auth.getSession()
       if (data.session?.user) {
         const { data: user } = await supabase
-          .from('profile')
+          .from('profiles')
           .select('*')
           .eq('id', data.session.user.id)
           .single()
