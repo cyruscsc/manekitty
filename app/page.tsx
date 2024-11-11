@@ -1,28 +1,25 @@
 'use client'
 
+import { DashboardButton } from '@/components/buttons/dashboard-button'
+import { SignInButton } from '@/components/buttons/sign-in-button'
+import { ButtonSkeleton } from '@/components/skeletons/button-skeleton'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
-import { Button } from '@/components/ui/button'
-import { routes } from '@/config/routes'
 import { useUser } from '@/hooks/user'
-import { redirect } from 'next/navigation'
 
 const page = () => {
   const { isFetching, data } = useUser()
   return (
     <div className='h-[3000px]'>
-      <ThemeToggle />
-      {data ? (
-        <Button
-          variant='outline'
-          onClick={() => redirect(routes.dashboard.href)}
-        >
-          Dashboard
-        </Button>
-      ) : (
-        <Button variant='outline' onClick={() => redirect(routes.auth.href)}>
-          Sign in
-        </Button>
-      )}
+      <div className='flex'>
+        <ThemeToggle />
+        {isFetching ? (
+          <ButtonSkeleton />
+        ) : data ? (
+          <DashboardButton />
+        ) : (
+          <SignInButton />
+        )}
+      </div>
     </div>
   )
 }

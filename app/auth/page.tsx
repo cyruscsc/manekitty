@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { routes } from '@/config/routes'
 import { supabaseBrowser } from '@/lib/supabase/browser'
 
 import React from 'react'
@@ -19,7 +20,8 @@ const page = () => {
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: location.origin + '/auth/callback',
+        redirectTo:
+          location.origin + '/auth/callback?next=' + routes.dashboard.href,
       },
     })
   }
