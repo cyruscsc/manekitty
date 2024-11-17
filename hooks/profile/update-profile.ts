@@ -1,4 +1,4 @@
-import { updateProfile } from '@/lib/actions/user/update-profile'
+import { updateProfile } from '@/lib/actions/profile/update-profile'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useUpdateProfile = () => {

@@ -4,8 +4,8 @@ import { currencies, themes } from '@/config/enums'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useGetProfile } from '@/hooks/user/get-profile'
-import { useUpdateProfile } from '@/hooks/user/update-profile'
+import { useGetProfile } from '@/hooks/profile/get-profile'
+import { useUpdateProfile } from '@/hooks/profile/update-profile'
 import { Currency, Theme } from '@/lib/types/enums.types'
 import {
   Form,

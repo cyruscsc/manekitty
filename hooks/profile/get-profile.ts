@@ -1,4 +1,4 @@
-import { getProfile } from '@/lib/actions/user/get-profile'
+import { getProfile } from '@/lib/actions/profile/get-profile'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetProfile = () => {
