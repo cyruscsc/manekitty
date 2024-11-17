@@ -48,9 +48,12 @@ export const ProfileForm = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       await updateProfile({
-        display_name: data.displayName,
-        theme: data.theme as Theme,
-        currency: data.currency as Currency,
+        id: profile?.id as string,
+        profile: {
+          display_name: data.displayName,
+          theme: data.theme as Theme,
+          currency: data.currency as Currency,
+        },
       })
     } catch (error) {
       console.error(error)

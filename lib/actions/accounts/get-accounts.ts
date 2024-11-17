@@ -1,16 +1,15 @@
 import { supabaseBrowser } from '../../supabase/browser'
 
-export const getProfile = async () => {
+export const getAccounts = async () => {
   const supabase = supabaseBrowser()
   const {
     data: { user },
   } = await supabase.auth.getUser()
   if (!user) return null
-  const { data: profile, error } = await supabase
-    .from('profiles')
+  const { data: accounts, error } = await supabase
+    .from('accounts')
     .select('*')
-    .eq('id', user.id)
-    .single()
+    .eq('user_id', user.id)
   if (error) throw error
-  return profile
+  return accounts
 }
