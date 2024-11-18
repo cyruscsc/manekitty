@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog'
+import { AccountForm } from '../forms/account-form'
 
 interface AddAccountDialogProps {
   open: boolean
@@ -29,7 +30,7 @@ export const AddAccountDialog = ({
             Add a account to record transactions.
           </DialogDescription>
         </DialogHeader>
-        <div>Form goes here</div>
+        <AccountForm />
       </DialogContent>
     </Dialog>
   )

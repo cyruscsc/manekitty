@@ -10,6 +10,7 @@ import {
   DrawerTrigger,
 } from '../ui/drawer'
 import { Button } from '../ui/button'
+import { AccountForm } from '../forms/account-form'
 
 interface AddAccountDrawerProps {
   open: boolean
@@ -32,7 +33,7 @@ export const AddAccountDrawer = ({
             Add a account to record transactions.
           </DrawerDescription>
         </DrawerHeader>
-        <div className='px-4'>Form goes here</div>
+        <AccountForm />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>
