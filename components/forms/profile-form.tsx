@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
+import { Profile, ProfileUpdate } from '@/lib/types/tables.types'
 
 const formSchema = z.object({
   displayName: z.string().min(2).max(16),
@@ -32,23 +33,26 @@ const formSchema = z.object({
   currency: z.enum(currencies as [string, ...string[]]),
 })
 
-export const ProfileForm = () => {
-  const { data: profile, isFetching } = useGetProfile()
-  const { mutateAsync: updateProfile, isPending } = useUpdateProfile()
+interface HookFormProps {
+  profile: Profile
+  updateProfile: (data: { id: string; profile: ProfileUpdate }) => Promise<void>
+  isPending: boolean
+}
 
+const HookForm = ({ profile, updateProfile, isPending }: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      displayName: profile?.display_name ?? '',
-      theme: profile?.theme,
-      currency: profile?.currency,
+      displayName: profile.display_name ?? '',
+      theme: profile.theme,
+      currency: profile.currency,
     },
   })
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       await updateProfile({
-        id: profile?.id as string,
+        id: profile.id as string,
         profile: {
           display_name: data.displayName,
           theme: data.theme as Theme,
@@ -60,7 +64,7 @@ export const ProfileForm = () => {
     }
   }
 
-  return profile && !isFetching ? (
+  return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
@@ -83,7 +87,7 @@ export const ProfileForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Theme</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Select a theme' />
@@ -107,7 +111,7 @@ export const ProfileForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Currency</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Select a currency' />
@@ -130,7 +134,22 @@ export const ProfileForm = () => {
         </Button>
       </form>
     </Form>
-  ) : (
-    <div>Loading...</div>
+  )
+}
+
+export const ProfileForm = () => {
+  const { data: profile } = useGetProfile()
+  const { mutateAsync: updateProfile, isPending } = useUpdateProfile()
+
+  if (!profile) {
+    return <div>Loading...</div>
+  }
+
+  return (
+    <HookForm
+      profile={profile}
+      updateProfile={updateProfile}
+      isPending={isPending}
+    />
   )
 }

@@ -24,6 +24,7 @@ import {
 import { Input } from '../ui/input'
 import { Switch } from '../ui/switch'
 import { Button } from '../ui/button'
+import { AccountCreate, Profile } from '@/lib/types/tables.types'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -33,14 +34,21 @@ const formSchema = z.object({
   includeInNetWorth: z.boolean(),
 })
 
-export const AccountForm = () => {
-  const { data: profile, isFetching } = useGetProfile()
-  const { mutateAsync: createAccount, isPending } = useCreateAccount()
+interface HookFormProps {
+  profile: Profile
+  createAccount: (data: AccountCreate) => Promise<void>
+  isPending: boolean
+}
 
+export const HookForm = ({
+  profile,
+  createAccount,
+  isPending,
+}: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userId: profile?.id as string,
+      userId: profile.id as string,
       color: '',
       name: '',
       type: '',
@@ -62,7 +70,7 @@ export const AccountForm = () => {
     }
   }
 
-  return profile && !isFetching ? (
+  return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
@@ -71,7 +79,7 @@ export const AccountForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Select a type' />
@@ -95,7 +103,7 @@ export const AccountForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Color</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder='Select a color' />
@@ -147,7 +155,22 @@ export const AccountForm = () => {
         </Button>
       </form>
     </Form>
-  ) : (
-    <div>Loading...</div>
+  )
+}
+
+export const AccountForm = () => {
+  const { data: profile } = useGetProfile()
+  const { mutateAsync: createAccount, isPending } = useCreateAccount()
+
+  if (!profile) {
+    return <div>Loading...</div>
+  }
+
+  return (
+    <HookForm
+      profile={profile}
+      createAccount={createAccount}
+      isPending={isPending}
+    />
   )
 }
