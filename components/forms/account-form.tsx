@@ -1,4 +1,4 @@
-import { accountTypes, colors } from '@/config/enums'
+import { accountTypes } from '@/config/enums'
 import { useCreateAccount } from '@/hooks/accounts/create-account'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { AccountType } from '@/lib/types/enums.types'
@@ -25,10 +25,11 @@ import { Input } from '../ui/input'
 import { Switch } from '../ui/switch'
 import { Button } from '../ui/button'
 import { AccountCreate, Profile } from '@/lib/types/tables.types'
+import { colors } from '@/config/colors'
 
 const formSchema = z.object({
   userId: z.string(),
-  color: z.enum(colors as unknown as [string, ...string[]]),
+  color: z.enum(Object.keys(colors) as unknown as [string, ...string[]]),
   name: z.string().min(2).max(16),
   type: z.enum(accountTypes as [string, ...string[]]),
   includeInNetWorth: z.boolean(),
@@ -110,7 +111,7 @@ export const HookForm = ({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {colors.map((color) => (
+                  {Object.keys(colors).map((color) => (
                     <SelectItem key={color} value={color}>
                       {color.charAt(0).toUpperCase() + color.slice(1)}
                     </SelectItem>
