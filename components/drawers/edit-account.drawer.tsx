@@ -3,37 +3,33 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from '../ui/drawer'
 import { Button } from '../ui/button'
-import { AddAccountForm } from '../forms/add-account-form'
+import { EditAccountForm } from '../forms/edit-account-form'
 
-interface AddAccountDrawerProps {
+interface EditAccountDrawerProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   trigger: ReactNode
 }
 
-export const AddAccountDrawer = ({
+export const EditAccountDrawer = ({
   open,
   setOpen,
   trigger,
-}: AddAccountDrawerProps) => {
+}: EditAccountDrawerProps) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className='text-left'>
-          <DrawerTitle>Add account</DrawerTitle>
-          <DrawerDescription>
-            Add a account to record transactions.
-          </DrawerDescription>
+          <DrawerTitle>Edit account</DrawerTitle>
         </DrawerHeader>
-        <AddAccountForm />
+        <EditAccountForm />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>

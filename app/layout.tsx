@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ThemeProvider } from '@/components/theme/theme-provider'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 import localFont from 'next/font/local'
 import './globals.css'
 import { QueryProvider } from '@/components/query/query-provider'

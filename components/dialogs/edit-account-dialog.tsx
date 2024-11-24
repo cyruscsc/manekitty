@@ -2,35 +2,31 @@ import { Dispatch, ReactNode, SetStateAction } from 'react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog'
-import { AddAccountForm } from '../forms/add-account-form'
+import { EditAccountForm } from '../forms/edit-account-form'
 
-interface AddAccountDialogProps {
+interface EditAccountDialogProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   trigger: ReactNode
 }
 
-export const AddAccountDialog = ({
+export const EditAccountDialog = ({
   open,
   setOpen,
   trigger,
-}: AddAccountDialogProps) => {
+}: EditAccountDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Account</DialogTitle>
-          <DialogDescription>
-            Add a account to record transactions.
-          </DialogDescription>
+          <DialogTitle>Edit Account</DialogTitle>
         </DialogHeader>
-        <AddAccountForm />
+        <EditAccountForm />
       </DialogContent>
     </Dialog>
   )

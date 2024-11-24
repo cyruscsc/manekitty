@@ -76,6 +76,20 @@ export const HookForm = ({
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
+          name='name'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder='Account name' {...field} />
+              </FormControl>
+              <FormDescription>2-16 characters</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name='type'
           render={({ field }) => (
             <FormItem>
@@ -124,20 +138,6 @@ export const HookForm = ({
         />
         <FormField
           control={form.control}
-          name='name'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder='Account name' {...field} />
-              </FormControl>
-              <FormDescription>2-16 characters</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name='includeInNetWorth'
           render={({ field }) => (
             <FormItem>
@@ -159,7 +159,7 @@ export const HookForm = ({
   )
 }
 
-export const AccountForm = () => {
+export const AddAccountForm = () => {
   const { data: profile } = useGetProfile()
   const { mutateAsync: createAccount, isPending } = useCreateAccount()
 

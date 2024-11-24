@@ -7,9 +7,10 @@ import {
   CardTitle,
 } from '../ui/card'
 import { AddTransactionButton } from '../buttons/add-transaction-button'
-import { EditAccountButton } from '../buttons/edit-account-button'
 import { colors } from '@/config/colors'
 import { ColorDot } from '../basics/color-dot'
+import { EditAccountResponsiveDialog } from '../responsive-dialogs/edit-account-responsive-dialog'
+import { AccountProvider } from '../providers/account-provider'
 
 interface AccountCardProps {
   account: Account
@@ -17,7 +18,7 @@ interface AccountCardProps {
 
 export const AccountCard = ({ account }: AccountCardProps) => {
   return (
-    <>
+    <AccountProvider account={account}>
       <ColorDot
         color={account.color as keyof typeof colors}
         className='relative -left-1 top-3'
@@ -29,9 +30,9 @@ export const AccountCard = ({ account }: AccountCardProps) => {
         </CardHeader>
         <CardFooter className='py-0 gap-2'>
           <AddTransactionButton accountID={account.id} />
-          <EditAccountButton accountID={account.id} />
+          <EditAccountResponsiveDialog />
         </CardFooter>
       </Card>
-    </>
+    </AccountProvider>
   )
 }
