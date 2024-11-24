@@ -11,6 +11,7 @@ import { colors } from '@/config/colors'
 import { ColorDot } from '../basics/color-dot'
 import { EditAccountResponsiveDialog } from '../responsive-dialogs/edit-account-responsive-dialog'
 import { AccountProvider } from '../providers/account-provider'
+import { DeleteAccountDialog } from '../dialogs/delete-account-dialog'
 
 interface AccountCardProps {
   account: Account
@@ -31,6 +32,7 @@ export const AccountCard = ({ account }: AccountCardProps) => {
         <CardFooter className='py-0 gap-2'>
           <AddTransactionButton accountID={account.id} />
           <EditAccountResponsiveDialog />
+          <DeleteAccountDialog />
         </CardFooter>
       </Card>
     </AccountProvider>
