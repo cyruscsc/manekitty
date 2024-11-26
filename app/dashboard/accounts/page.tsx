@@ -1,10 +1,10 @@
 import { AddAccountResponsiveDialog } from '@/components/responsive-dialogs/add-account-responsive-dialog'
-import { AccountTable } from '@/components/tables/account-table'
+import { AccountList } from '@/components/lists/account-list'
 
 const page = () => {
   return (
     <>
-      <AccountTable />
+      <AccountList />
       <AddAccountResponsiveDialog />
     </>
   )

@@ -1,4 +1,4 @@
-import { deleteAccount } from '@/lib/actions/accounts/delete-account'
+import { deleteAccount } from '@/lib/actions/account/delete-account'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useDeleteAccount = () => {

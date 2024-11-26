@@ -24,8 +24,8 @@ import { Switch } from '../ui/switch'
 import { Button } from '../ui/button'
 import { AccountUpdate, Profile } from '@/lib/types/tables.types'
 import { colors } from '@/config/colors'
-import { useCurrentAccount } from '@/hooks/accounts/current-account'
-import { useUpdateAccount } from '@/hooks/accounts/update-account'
+import { useCurrentAccount } from '@/hooks/account/current-account'
+import { useUpdateAccount } from '@/hooks/account/update-account'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 
 const formSchema = z.object({

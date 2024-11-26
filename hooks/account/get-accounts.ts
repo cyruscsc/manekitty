@@ -1,4 +1,4 @@
-import { getAccounts } from '@/lib/actions/accounts/get-accounts'
+import { getAccounts } from '@/lib/actions/account/get-accounts'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetAccounts = () => {

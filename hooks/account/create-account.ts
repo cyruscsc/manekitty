@@ -1,4 +1,4 @@
-import { createAccount } from '@/lib/actions/accounts/create-account'
+import { createAccount } from '@/lib/actions/account/create-account'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useCreateAccount = () => {

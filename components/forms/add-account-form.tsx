@@ -1,5 +1,5 @@
 import { accountTypes } from '@/config/enums'
-import { useCreateAccount } from '@/hooks/accounts/create-account'
+import { useCreateAccount } from '@/hooks/account/create-account'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { AccountType } from '@/lib/types/enums.types'
 import { zodResolver } from '@hookform/resolvers/zod'

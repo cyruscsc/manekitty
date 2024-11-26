@@ -1,9 +1,9 @@
 'use client'
 
-import { useGetAccounts } from '@/hooks/accounts/get-accounts'
+import { useGetAccounts } from '@/hooks/account/get-accounts'
 import { AccountCard } from '../cards/account-card'
 
-export const AccountTable = () => {
+export const AccountList = () => {
   const { data: accounts, isFetching } = useGetAccounts()
 
   if (isFetching) {

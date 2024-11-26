@@ -1,4 +1,4 @@
-import { updateAccount } from '@/lib/actions/accounts/update-account'
+import { updateAccount } from '@/lib/actions/account/update-account'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const useUpdateAccount = () => {

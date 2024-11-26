@@ -1,4 +1,4 @@
-import { useCurrentAccount } from '@/hooks/accounts/current-account'
+import { useCurrentAccount } from '@/hooks/account/current-account'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +12,7 @@ import {
 } from '../ui/alert-dialog'
 import { Button } from '../ui/button'
 import { TrashIcon } from '@radix-ui/react-icons'
-import { useDeleteAccount } from '@/hooks/accounts/delete-account'
+import { useDeleteAccount } from '@/hooks/account/delete-account'
 
 export const DeleteAccountDialog = () => {
   const { account } = useCurrentAccount()
