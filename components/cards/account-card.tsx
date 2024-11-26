@@ -22,6 +22,7 @@ export const AccountCard = ({ account }: AccountCardProps) => {
     <AccountProvider account={account}>
       <ColorDot
         color={account.color as keyof typeof colors}
+        type='account'
         className='relative -left-1 top-3'
       />
       <Card className='flex justify-between'>
