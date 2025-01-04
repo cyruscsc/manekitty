@@ -9,7 +9,11 @@ interface ColorDotProps {
 
 export const ColorDot = ({ color, type, className }: ColorDotProps) => {
   return (
-    <div className={`w-4 h-4 rounded-full ${colors[color][type]} ${className}`} />
+    <div
+      className={`${
+        type === 'account' ? 'w-4 h-4' : type === 'category' ? 'w-2 h-2' : ''
+      } rounded-full ${colors[color][type]} ${className}`}
+    />
   )
 }
 
