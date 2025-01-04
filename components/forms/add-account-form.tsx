@@ -33,6 +33,7 @@ const formSchema = z.object({
   name: z.string().min(2).max(16),
   type: z.enum(accountTypes as [string, ...string[]]),
   includeInNetWorth: z.boolean(),
+  balance: z.coerce.number(),
 })
 
 interface HookFormProps {
@@ -54,6 +55,7 @@ export const HookForm = ({
       name: '',
       type: '',
       includeInNetWorth: true,
+      balance: 0,
     },
   })
 
@@ -65,6 +67,7 @@ export const HookForm = ({
         name: data.name,
         type: data.type as AccountType,
         include_in_net_worth: data.includeInNetWorth,
+        balance: data.balance,
       })
     } catch (error) {
       console.error(error)
@@ -138,19 +141,33 @@ export const HookForm = ({
         />
         <FormField
           control={form.control}
-          name='includeInNetWorth'
+          name='balance'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Include in net worth</FormLabel>
+              <FormLabel>Initial balance</FormLabel>
               <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Input placeholder='0' {...field} />
               </FormControl>
+              <FormDescription>Enter negative value for credit and debt</FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
+          <FormField
+            control={form.control}
+            name='includeInNetWorth'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Include in net worth</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
         <Button type='submit' disabled={isPending}>
           Add
         </Button>

@@ -34,6 +34,7 @@ const formSchema = z.object({
   name: z.string().min(2).max(16),
   type: z.enum(accountTypes as [string, ...string[]]),
   includeInNetWorth: z.boolean(),
+  balance: z.coerce.number(),
 })
 
 interface HookFormProps {
@@ -59,6 +60,7 @@ export const HookForm = ({
       name: account.name,
       type: account.type,
       includeInNetWorth: account.include_in_net_worth,
+      balance: account.balance,
     },
   })
 
@@ -72,6 +74,7 @@ export const HookForm = ({
           name: data.name,
           type: data.type as AccountType,
           include_in_net_worth: data.includeInNetWorth,
+          balance: data.balance,
         },
       })
     } catch (error) {
@@ -140,6 +143,20 @@ export const HookForm = ({
                   ))}
                 </SelectContent>
               </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='balance'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Balance</FormLabel>
+              <FormControl>
+                <Input placeholder='0' {...field} />
+              </FormControl>
+              <FormDescription>Enter negative value for credit and debt</FormDescription>
               <FormMessage />
             </FormItem>
           )}
