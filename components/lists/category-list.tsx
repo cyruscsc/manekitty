@@ -1,30 +1,31 @@
 'use client'
 
-import { useGetCategories } from '@/hooks/category/get-categories'
+import { useGetAllCategories } from '@/hooks/category/get-all-categories'
 import { CategoryCard } from '../cards/category-card'
+import { Category, Subcategory } from '@/lib/types/tables.types'
 
 export const CategoryList = () => {
-  const { data: categories, isFetching } = useGetCategories()
+  const { data: allCategories, isFetching } = useGetAllCategories()
 
   if (isFetching) {
     return <p>Loading...</p>
   }
 
-  if (!categories || categories.length === 0) {
+  if (!allCategories || allCategories.length === 0) {
     return <p>No categories found</p>
   }
 
-  const parentCategories = categories.filter((category) => !category.parent_id)
-  const childCategories = categories.filter((category) => category.parent_id)
+  const categories = allCategories.filter((x) => !x.parent_id) as Category[]
+  const subcategories = allCategories.filter((x) => x.parent_id) as Subcategory[]
 
   return (
     <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-      {parentCategories.map((parentCategory) => (
+      {categories.map((category) => (
         <CategoryCard
-          key={parentCategory.id}
-          parent_category={parentCategory}
-          child_categories={childCategories.filter(
-            (category) => category.parent_id === parentCategory.id
+          key={category.id}
+          category={category}
+          subcategories={subcategories.filter(
+            (subcategory) => subcategory.parent_id === category.id
           )}
         />
       ))}

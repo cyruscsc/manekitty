@@ -1,6 +1,6 @@
 import { supabaseBrowser } from '@/lib/supabase/browser'
 
-export const getCategories = async () => {
+export const getAllCategories = async () => {
   const supabase = supabaseBrowser()
   const {
     data: { user },

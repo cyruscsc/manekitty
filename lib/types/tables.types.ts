@@ -10,4 +10,12 @@ export type AccountCreate = Database['public']['Tables']['accounts']['Insert']
 
 export type AccountUpdate = Database['public']['Tables']['accounts']['Update']
 
-export type Category = Database['public']['Tables']['categories']['Row']
+export type Category = Omit<
+  Database['public']['Tables']['categories']['Row'],
+  'parent_id'
+> & { parent_id: null }
+
+export type Subcategory = Omit<
+  Database['public']['Tables']['categories']['Row'],
+  'parent_id'
+> & { parent_id: string }

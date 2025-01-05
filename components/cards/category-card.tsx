@@ -1,4 +1,4 @@
-import { Category } from '@/lib/types/tables.types'
+import { Category, Subcategory } from '@/lib/types/tables.types'
 import {
   Card,
   CardContent,
@@ -6,35 +6,36 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import { CategoryBadge } from '../badges/category-badge'
+import { SubcategoryBadge } from '../badges/subcategory-badge'
 import { Color } from '@/lib/types/enums.types'
 import { EditCategoryResponsiveDialog } from '../responsive-dialogs/edit-category-responsive-dialog'
 import { CategoryProvider } from '../providers/category-provider'
+import { SubcategoryProvider } from '../providers/subcategory-provider'
 
 interface CategoryCardProps {
-  parent_category: Category
-  child_categories: Category[]
+  category: Category
+  subcategories: Subcategory[]
 }
 
 export const CategoryCard = ({
-  parent_category,
-  child_categories,
+  category,
+  subcategories,
 }: CategoryCardProps) => {
   return (
-    <CategoryProvider category={parent_category}>
+    <CategoryProvider category={category}>
       <Card>
         <CardHeader>
-          <CardTitle>{parent_category.name}</CardTitle>
+          <CardTitle>{category.name}</CardTitle>
         </CardHeader>
         <CardContent>
-          {child_categories.map((category) => (
-            <CategoryProvider key={category.id} category={category}>
-              <CategoryBadge
-                name={category.name}
-                color={category.color as Color}
+          {subcategories.map((subcategory) => (
+            <SubcategoryProvider key={subcategory.id} subcategory={subcategory}>
+              <SubcategoryBadge
+                name={subcategory.name}
+                color={subcategory.color as Color}
                 clickable={true}
               />
-            </CategoryProvider>
+            </SubcategoryProvider>
           ))}
         </CardContent>
         <CardFooter>

@@ -3,22 +3,22 @@ import { ColorDot } from '../basics/color-dot'
 import { Badge } from '../ui/badge'
 import { useState } from 'react'
 import { useMediaQuery } from '@/hooks/ui/media-query'
-import { EditCategoryDialog } from '../dialogs/edit-category-dialog'
-import { EditCategoryDrawer } from '../drawers/edit-category-drawer'
+import { EditSubcategoryDialog } from '../dialogs/edit-subcategory-dialog'
+import { EditSubcategoryDrawer } from '../drawers/edit-subcategory-drawer'
 
-interface CatBadgeProps {
+interface SubcatBadgeProps {
   name: string
   color: Color
   role?: string
 }
 
-interface CategoryBadgeProps {
+interface SubcategoryBadgeProps {
   name: string
   color: Color
   clickable?: boolean
 }
 
-export const CatBadge = ({ name, color }: CatBadgeProps) => {
+export const SubcatBadge = ({ name, color }: SubcatBadgeProps) => {
   return (
     <Badge variant='outline'>
       <ColorDot color={color} type='category' className='mr-1' />
@@ -27,13 +27,13 @@ export const CatBadge = ({ name, color }: CatBadgeProps) => {
   )
 }
 
-export const CategoryBadge = ({
+export const SubcategoryBadge = ({
   name,
   color,
   clickable,
-}: CategoryBadgeProps) => {
+}: SubcategoryBadgeProps) => {
   if (!clickable) {
-    return <CatBadge name={name} color={color} />
+    return <SubcatBadge name={name} color={color} />
   }
 
   const [open, setOpen] = useState(false)
@@ -44,14 +44,14 @@ export const CategoryBadge = ({
     setOpen,
     trigger: (
       <button>
-        <CatBadge name={name} color={color} />
+        <SubcatBadge name={name} color={color} />
       </button>
     ),
   }
 
   return isDesktop ? (
-    <EditCategoryDialog {...childProps} />
+    <EditSubcategoryDialog {...childProps} />
   ) : (
-    <EditCategoryDrawer {...childProps} />
+    <EditSubcategoryDrawer {...childProps} />
   )
 }
