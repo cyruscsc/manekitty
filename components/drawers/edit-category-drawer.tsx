@@ -6,27 +6,26 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '../ui/drawer'
-import { EditAccountForm } from '../forms/edit-account-form'
 
-interface EditAccountDrawerProps {
+interface EditCategoryDrawerProps {
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   trigger: ReactNode
 }
 
-export const EditAccountDrawer = ({
+export const EditCategoryDrawer = ({
   open,
   setOpen,
   trigger,
-}: EditAccountDrawerProps) => {
+}: EditCategoryDrawerProps) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className='text-left'>
-          <DrawerTitle>Edit account</DrawerTitle>
+          <DrawerTitle>Edit category</DrawerTitle>
         </DrawerHeader>
-        <EditAccountForm />
+        {/* <EditCategoryForm /> */}
       </DrawerContent>
     </Drawer>
   )
