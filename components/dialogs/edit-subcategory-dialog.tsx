@@ -1,5 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { EditSubcategoryForm } from '../forms/edit-subcategory-form'
 
 interface EditSubcategoryDialogProps {
   open: boolean
@@ -19,7 +20,7 @@ export const EditSubcategoryDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Subcategory</DialogTitle>
         </DialogHeader>
-        {/* <EditSubcategoryForm /> */}
+        <EditSubcategoryForm />
       </DialogContent>
     </Dialog>
   )

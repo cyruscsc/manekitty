@@ -19,3 +19,13 @@ export type Subcategory = Omit<
   Database['public']['Tables']['categories']['Row'],
   'parent_id'
 > & { parent_id: string }
+
+export type CategoryUpdate = Omit<
+  Database['public']['Tables']['categories']['Update'],
+  'parent_id'
+> & { parent_id: null }
+
+export type SubcategoryUpdate = Omit<
+  Database['public']['Tables']['categories']['Update'],
+  'parent_id'
+> & { parent_id: string }

@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog'
+import { EditCategoryForm } from '../forms/edit-category-form'
 
 interface EditCategoryDialogProps {
   open: boolean
@@ -25,7 +26,7 @@ export const EditCategoryDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Category</DialogTitle>
         </DialogHeader>
-        {/* <EditCategoryForm /> */}
+        <EditCategoryForm />
       </DialogContent>
     </Dialog>
   )

@@ -6,6 +6,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '../ui/drawer'
+import { EditCategoryForm } from '../forms/edit-category-form'
 
 interface EditCategoryDrawerProps {
   open: boolean
@@ -25,7 +26,7 @@ export const EditCategoryDrawer = ({
         <DrawerHeader className='text-left'>
           <DrawerTitle>Edit category</DrawerTitle>
         </DrawerHeader>
-        {/* <EditCategoryForm /> */}
+        <EditCategoryForm />
       </DrawerContent>
     </Drawer>
   )
