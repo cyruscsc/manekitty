@@ -11,6 +11,7 @@ import { Color } from '@/lib/types/enums.types'
 import { EditCategoryResponsiveDialog } from '../responsive-dialogs/edit-category-responsive-dialog'
 import { CategoryProvider } from '../providers/category-provider'
 import { SubcategoryProvider } from '../providers/subcategory-provider'
+import { AddSubcategoryResponsiveDialog } from '../responsive-dialogs/add-subcategory-responsive-dialog'
 
 interface CategoryCardProps {
   category: Category
@@ -39,6 +40,7 @@ export const CategoryCard = ({
           ))}
         </CardContent>
         <CardFooter>
+          <AddSubcategoryResponsiveDialog />
           <EditCategoryResponsiveDialog />
         </CardFooter>
       </Card>

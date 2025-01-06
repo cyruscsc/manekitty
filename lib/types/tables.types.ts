@@ -15,15 +15,25 @@ export type Category = Omit<
   'parent_id'
 > & { parent_id: null }
 
-export type Subcategory = Omit<
-  Database['public']['Tables']['categories']['Row'],
+export type CategoryCreate = Omit<
+  Database['public']['Tables']['categories']['Insert'],
   'parent_id'
-> & { parent_id: string }
+> & { parent_id: null }
 
 export type CategoryUpdate = Omit<
   Database['public']['Tables']['categories']['Update'],
   'parent_id'
 > & { parent_id: null }
+
+export type Subcategory = Omit<
+  Database['public']['Tables']['categories']['Row'],
+  'parent_id'
+> & { parent_id: string }
+
+export type SubcategoryCreate = Omit<
+  Database['public']['Tables']['categories']['Insert'],
+  'parent_id'
+> & { parent_id: string }
 
 export type SubcategoryUpdate = Omit<
   Database['public']['Tables']['categories']['Update'],
