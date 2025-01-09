@@ -3,15 +3,16 @@ import { Color } from '@/lib/types/enums.types'
 
 interface ColorDotProps {
   color: Color
+  size: 'sm' | 'lg'
   type: 'account' | 'category'
   className?: string
 }
 
-export const ColorDot = ({ color, type, className }: ColorDotProps) => {
+export const ColorDot = ({ color, type, size, className }: ColorDotProps) => {
   return (
     <div
       className={`${
-        type === 'account' ? 'w-4 h-4' : type === 'category' ? 'w-2 h-2' : ''
+        size === 'sm' ? 'w-2 h-2' : size === 'lg' ? 'w-4 h-4' : ''
       } rounded-full ${colors[color][type]} ${className}`}
     />
   )

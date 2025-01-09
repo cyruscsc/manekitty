@@ -21,7 +21,7 @@ interface SubcategoryBadgeProps {
 export const SubcatBadge = ({ name, color }: SubcatBadgeProps) => {
   return (
     <Badge variant='outline'>
-      <ColorDot color={color} type='category' className='mr-1' />
+      <ColorDot color={color} size='sm' type='category' className='mr-1' />
       {name}
     </Badge>
   )
