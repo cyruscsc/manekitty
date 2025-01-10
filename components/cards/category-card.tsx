@@ -8,10 +8,13 @@ import {
 } from '../ui/card'
 import { SubcategoryBadge } from '../badges/subcategory-badge'
 import { Color } from '@/lib/types/enums.types'
-import { EditCategoryResponsiveDialog } from '../responsive-dialogs/edit-category-responsive-dialog'
 import { CategoryProvider } from '../providers/category-provider'
 import { SubcategoryProvider } from '../providers/subcategory-provider'
-import { AddSubcategoryResponsiveDialog } from '../responsive-dialogs/add-subcategory-responsive-dialog'
+import { FormModal } from '../modals/form-modal'
+import { AddSubcategoryForm } from '../forms/add-subcategory-form'
+import { Button } from '../ui/button'
+import { Pencil1Icon, PlusIcon } from '@radix-ui/react-icons'
+import { EditCategoryForm } from '../forms/edit-category-form'
 
 interface CategoryCardProps {
   category: Category
@@ -40,8 +43,24 @@ export const CategoryCard = ({
           ))}
         </CardContent>
         <CardFooter>
-          <AddSubcategoryResponsiveDialog />
-          <EditCategoryResponsiveDialog />
+          <FormModal
+            title='Add subcategory'
+            trigger={
+              <Button>
+                <PlusIcon />
+              </Button>
+            }
+            form={<AddSubcategoryForm />}
+          />
+          <FormModal
+            title='Edit category'
+            trigger={
+              <Button variant='secondary'>
+                <Pencil1Icon />
+              </Button>
+            }
+            form={<EditCategoryForm />}
+          />
         </CardFooter>
       </Card>
     </CategoryProvider>

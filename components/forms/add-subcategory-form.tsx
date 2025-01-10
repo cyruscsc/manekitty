@@ -1,3 +1,5 @@
+'use client'
+
 import { colors } from '@/config/colors'
 import { Profile, SubcategoryCreate } from '@/lib/types/tables.types'
 import { zodResolver } from '@hookform/resolvers/zod'

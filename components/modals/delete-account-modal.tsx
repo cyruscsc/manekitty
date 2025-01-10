@@ -14,7 +14,7 @@ import { Button } from '../ui/button'
 import { TrashIcon } from '@radix-ui/react-icons'
 import { useDeleteAccount } from '@/hooks/account/delete-account'
 
-export const DeleteAccountDialog = () => {
+export const DeleteAccountModal = () => {
   const { account } = useCurrentAccount()
   const { mutateAsync: deleteAccount, isPending } = useDeleteAccount()
   return (

@@ -1,3 +1,5 @@
+'use client'
+
 import { accountTypes } from '@/config/enums'
 import { AccountType } from '@/lib/types/enums.types'
 import { zodResolver } from '@hookform/resolvers/zod'

@@ -1,3 +1,5 @@
+'use client'
+
 import { colors } from '@/config/colors'
 import { useCurrentSubcategory } from '@/hooks/category/current-subcategory'
 import { Profile, SubcategoryUpdate } from '@/lib/types/tables.types'

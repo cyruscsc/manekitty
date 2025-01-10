@@ -1,3 +1,5 @@
+'use client'
+
 import { accountTypes } from '@/config/enums'
 import { useCreateAccount } from '@/hooks/account/create-account'
 import { useGetProfile } from '@/hooks/profile/get-profile'
