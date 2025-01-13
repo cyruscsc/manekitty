@@ -39,3 +39,8 @@ export type SubcategoryUpdate = Omit<
   Database['public']['Tables']['categories']['Update'],
   'parent_id'
 > & { parent_id: string }
+
+export type Transaction = Database['public']['Tables']['transactions']['Row']
+
+export type TransactionCreate =
+  Database['public']['Tables']['transactions']['Insert']
