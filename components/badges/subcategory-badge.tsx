@@ -28,7 +28,7 @@ const SubcatBadge = ({ name, color }: SubcatBadgeProps) => {
 export const SubcategoryBadge = ({
   name,
   color,
-  clickable,
+  clickable = false,
 }: SubcategoryBadgeProps) => {
   return clickable ? (
     <FormModal
