@@ -13,10 +13,28 @@ import {
 import { Button } from '../ui/button'
 import { TrashIcon } from '@radix-ui/react-icons'
 import { useDeleteAccount } from '@/hooks/account/delete-account'
+import { useToast } from '@/hooks/ui/use-toast'
 
 export const DeleteAccountModal = () => {
   const { account } = useCurrentAccount()
   const { mutateAsync: deleteAccount, isPending } = useDeleteAccount()
+  const { toast } = useToast()
+
+  const handleDelete = async () => {
+    try {
+      await deleteAccount(account.id)
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to delete account',
+      })
+      console.error(error)
+    }
+    toast({
+      description: 'Account deleted successfully',
+    })
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -36,10 +54,7 @@ export const DeleteAccountModal = () => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            disabled={isPending}
-            onClick={() => deleteAccount(account.id)}
-          >
+          <AlertDialogAction disabled={isPending} onClick={handleDelete}>
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>

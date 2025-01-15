@@ -25,6 +25,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useCreateCategory } from '@/hooks/category/create-category'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -37,12 +38,14 @@ interface HookFormProps {
   profile: Profile
   createCategory: (data: CategoryCreate) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
   createCategory,
   isPending,
+  toast,
 }: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,8 +66,15 @@ export const HookForm = ({
         name: data.name,
       })
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to create category',
+      })
       console.error(error)
     }
+    toast({
+      description: 'Category created successfully',
+    })
   }
 
   return (
@@ -119,6 +129,7 @@ export const HookForm = ({
 export const AddCategoryForm = () => {
   const { data: profile } = useGetProfile()
   const { mutateAsync: createCategory, isPending } = useCreateCategory()
+  const { toast } = useToast()
 
   if (!profile) {
     return <div>Loading...</div>
@@ -129,6 +140,7 @@ export const AddCategoryForm = () => {
       profile={profile}
       createCategory={createCategory}
       isPending={isPending}
+      toast={toast}
     />
   )
 }

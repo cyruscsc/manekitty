@@ -28,6 +28,7 @@ import { Switch } from '../ui/switch'
 import { Button } from '../ui/button'
 import { AccountCreate, Profile } from '@/lib/types/tables.types'
 import { colors } from '@/config/colors'
+import { toast, useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -42,12 +43,14 @@ interface HookFormProps {
   profile: Profile
   createAccount: (data: AccountCreate) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
   createAccount,
   isPending,
+  toast,
 }: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -72,8 +75,15 @@ export const HookForm = ({
         balance: data.balance,
       })
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to create account',
+      })
       console.error(error)
     }
+    toast({
+      description: 'Account created successfully',
+    })
   }
 
   return (
@@ -150,26 +160,28 @@ export const HookForm = ({
               <FormControl>
                 <Input placeholder='0' {...field} />
               </FormControl>
-              <FormDescription>Enter negative value for credit and debt</FormDescription>
+              <FormDescription>
+                Enter negative value for credit and debt
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-          <FormField
-            control={form.control}
-            name='includeInNetWorth'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Include in net worth</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name='includeInNetWorth'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Include in net worth</FormLabel>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         <Button type='submit' disabled={isPending}>
           Add
         </Button>
@@ -181,6 +193,7 @@ export const HookForm = ({
 export const AddAccountForm = () => {
   const { data: profile } = useGetProfile()
   const { mutateAsync: createAccount, isPending } = useCreateAccount()
+  const { toast } = useToast()
 
   if (!profile) {
     return <div>Loading...</div>
@@ -191,6 +204,7 @@ export const AddAccountForm = () => {
       profile={profile}
       createAccount={createAccount}
       isPending={isPending}
+      toast={toast}
     />
   )
 }

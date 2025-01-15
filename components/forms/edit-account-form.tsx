@@ -24,11 +24,12 @@ import {
 import { Input } from '../ui/input'
 import { Switch } from '../ui/switch'
 import { Button } from '../ui/button'
-import { AccountUpdate, Profile } from '@/lib/types/tables.types'
+import { Account, AccountUpdate, Profile } from '@/lib/types/tables.types'
 import { colors } from '@/config/colors'
 import { useCurrentAccount } from '@/hooks/account/current-account'
 import { useUpdateAccount } from '@/hooks/account/update-account'
 import { useGetProfile } from '@/hooks/profile/get-profile'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -41,19 +42,22 @@ const formSchema = z.object({
 
 interface HookFormProps {
   profile: Profile
+  account: Account
   updateAccount: (params: {
     id: string
     account: AccountUpdate
   }) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
+  account,
   updateAccount,
   isPending,
+  toast,
 }: HookFormProps) => {
-  const { account } = useCurrentAccount()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,8 +84,15 @@ export const HookForm = ({
         },
       })
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to update account',
+      })
       console.error(error)
     }
+    toast({
+      description: 'Account updated successfully',
+    })
   }
 
   return (
@@ -158,7 +169,9 @@ export const HookForm = ({
               <FormControl>
                 <Input placeholder='0' {...field} />
               </FormControl>
-              <FormDescription>Enter negative value for credit and debt</FormDescription>
+              <FormDescription>
+                Enter negative value for credit and debt
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -188,17 +201,21 @@ export const HookForm = ({
 
 export const EditAccountForm = () => {
   const { data: profile } = useGetProfile()
+  const { account } = useCurrentAccount()
   const { mutateAsync: updateAccount, isPending } = useUpdateAccount()
+  const { toast } = useToast()
 
-  if (!profile) {
+  if (!profile || !account) {
     return <div>Loading...</div>
   }
 
   return (
     <HookForm
       profile={profile}
+      account={account}
       updateAccount={updateAccount}
       isPending={isPending}
+      toast={toast}
     />
   )
 }

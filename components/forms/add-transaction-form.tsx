@@ -2,7 +2,13 @@
 
 import { transactionTypes } from '@/config/enums'
 import { Color, TransactionType } from '@/lib/types/enums.types'
-import { Profile, TransactionCreate } from '@/lib/types/tables.types'
+import {
+  Profile,
+  TransactionCreate,
+  Account,
+  Category,
+  Subcategory,
+} from '@/lib/types/tables.types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -46,8 +52,9 @@ import {
   SelectValue,
 } from '../ui/select'
 import { Calendar } from '../ui/calendar'
-import { format, set } from 'date-fns'
+import { format } from 'date-fns'
 import { useState } from 'react'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -61,33 +68,39 @@ const formSchema = z.object({
 
 interface HookFormProps {
   profile: Profile
+  accounts: Account[]
+  categories: Category[]
+  subcategories: Subcategory[]
   createTransaction: (data: TransactionCreate) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
+  accounts,
+  categories,
+  subcategories,
   createTransaction,
   isPending,
+  toast,
 }: HookFormProps) => {
-  const accounts = useGetAccounts()
-    .data?.map((account) => ({
+  const accountOpts = accounts
+    .map((account) => ({
       label: account.name,
       color: account.color,
       id: account.id,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
-  const { data: allCategories } = useGetAllCategories()
-  const categories = allCategories
-    ?.filter((category) => category.parent_id === null)
+  const categoryOpts = categories
     .map((category) => ({
       label: category.name,
       id: category.id,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
-  const subcategories = allCategories
-    ?.filter((category) => category.parent_id !== null)
+
+  const subcategoryOpts = subcategories
     .map((subcategory) => ({
       label: subcategory.name,
       color: subcategory.color,
@@ -124,10 +137,16 @@ export const HookForm = ({
         note: data.note,
         date: data.date.toISOString().split('T')[0],
       })
-      form.reset()
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to create transaction',
+      })
       console.error(error)
     }
+    toast({
+      description: 'Transaction created successfully',
+    })
   }
 
   return (
@@ -139,7 +158,11 @@ export const HookForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Account</FormLabel>
-              <Popover modal open={accountOpen} onOpenChange={setAccountOpen}>
+              <Popover
+                modal={true}
+                open={accountOpen}
+                onOpenChange={setAccountOpen}
+              >
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -150,7 +173,7 @@ export const HookForm = ({
                         <>
                           <ColorDot
                             color={
-                              accounts?.find(
+                              accountOpts?.find(
                                 (account) => account.id === field.value
                               )?.color as Color
                             }
@@ -158,7 +181,7 @@ export const HookForm = ({
                             type='account'
                           />{' '}
                           {
-                            accounts?.find(
+                            accountOpts?.find(
                               (account) => account.id === field.value
                             )?.label
                           }
@@ -176,7 +199,7 @@ export const HookForm = ({
                     <CommandList>
                       <CommandEmpty>No account found</CommandEmpty>
                       <CommandGroup>
-                        {accounts?.map((account) => (
+                        {accountOpts?.map((account) => (
                           <CommandItem
                             key={account.label}
                             value={account.label}
@@ -206,6 +229,7 @@ export const HookForm = ({
                   </Command>
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -215,7 +239,11 @@ export const HookForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <Popover modal open={categoryOpen} onOpenChange={setCategoryOpen}>
+              <Popover
+                modal={true}
+                open={categoryOpen}
+                onOpenChange={setCategoryOpen}
+              >
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -226,7 +254,7 @@ export const HookForm = ({
                         <>
                           <ColorDot
                             color={
-                              subcategories?.find(
+                              subcategoryOpts?.find(
                                 (subcategory) => subcategory.id === field.value
                               )?.color as Color
                             }
@@ -234,7 +262,7 @@ export const HookForm = ({
                             type='account'
                           />{' '}
                           {
-                            subcategories?.find(
+                            subcategoryOpts?.find(
                               (subcategory) => subcategory.id === field.value
                             )?.label
                           }
@@ -252,12 +280,12 @@ export const HookForm = ({
                     <CommandList>
                       <CommandEmpty>No category found</CommandEmpty>
 
-                      {categories?.map((category) => (
+                      {categoryOpts?.map((category) => (
                         <CommandGroup
                           key={category.label}
                           heading={category.label}
                         >
-                          {subcategories
+                          {subcategoryOpts
                             ?.filter(
                               (subcategory) =>
                                 subcategory.parent_id === category.id
@@ -293,6 +321,7 @@ export const HookForm = ({
                   </Command>
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -353,7 +382,7 @@ export const HookForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Date</FormLabel>
-              <Popover modal open={dateOpen} onOpenChange={setDateOpen}>
+              <Popover modal={true} open={dateOpen} onOpenChange={setDateOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
@@ -377,6 +406,7 @@ export const HookForm = ({
                   />
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -390,17 +420,32 @@ export const HookForm = ({
 
 export const AddTransactionForm = () => {
   const { data: profile } = useGetProfile()
+  const { data: accounts } = useGetAccounts()
+  const { data: allCategories } = useGetAllCategories()
   const { mutateAsync: createTransaction, isPending } = useCreateTransaction()
+  const { toast } = useToast()
 
-  if (!profile) {
+  if (!profile || !accounts || !allCategories) {
     return <div>Loading...</div>
   }
+
+  const categories = allCategories.filter(
+    (category) => !category.parent_id
+  ) as Category[]
+
+  const subcategories = allCategories.filter(
+    (category) => category.parent_id
+  ) as Subcategory[]
 
   return (
     <HookForm
       profile={profile}
+      accounts={accounts}
+      categories={categories}
+      subcategories={subcategories}
       createTransaction={createTransaction}
       isPending={isPending}
+      toast={toast}
     />
   )
 }

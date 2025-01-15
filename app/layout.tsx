@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider'
 import localFont from 'next/font/local'
 import './globals.css'
 import { QueryProvider } from '@/components/query/query-provider'
+import { Toaster } from '@/components/ui/toaster'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -37,9 +38,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className='max-w-6xl min-h-screen mx-auto'>
-              {children}
-            </main>
+            <main className='max-w-6xl min-h-screen mx-auto'>{children}</main>
+            <Toaster />
           </ThemeProvider>
         </QueryProvider>
       </body>

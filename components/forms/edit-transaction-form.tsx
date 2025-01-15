@@ -2,7 +2,14 @@
 
 import { transactionTypes } from '@/config/enums'
 import { Color, TransactionType } from '@/lib/types/enums.types'
-import { Profile, TransactionUpdate } from '@/lib/types/tables.types'
+import {
+  Account,
+  Category,
+  Profile,
+  Subcategory,
+  Transaction,
+  TransactionUpdate,
+} from '@/lib/types/tables.types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -44,7 +51,7 @@ import { format } from 'date-fns'
 import { useState } from 'react'
 import { useCurrentTransaction } from '@/hooks/transaction/current-transaction'
 import { useUpdateTransaction } from '@/hooks/transaction/update-transaction'
-import { colors } from '@/config/colors'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -58,38 +65,44 @@ const formSchema = z.object({
 
 interface HookFormProps {
   profile: Profile
+  transaction: Transaction
+  accounts: Account[]
+  categories: Category[]
+  subcategories: Subcategory[]
   updateTransaction: (params: {
     id: string
     transaction: TransactionUpdate
   }) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
+  transaction,
+  accounts,
+  categories,
+  subcategories,
   updateTransaction,
   isPending,
+  toast,
 }: HookFormProps) => {
-  const { transaction } = useCurrentTransaction()
-
-  const accounts = useGetAccounts()
-    .data?.map((account) => ({
+  const accountOpts = accounts
+    .map((account) => ({
       label: account.name,
       color: account.color,
       id: account.id,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
 
-  const { data: allCategories } = useGetAllCategories()
-  const categories = allCategories
-    ?.filter((category) => category.parent_id === null)
+  const categoryOpts = categories
     .map((category) => ({
       label: category.name,
       id: category.id,
     }))
     .sort((a, b) => a.label.localeCompare(b.label))
-  const subcategories = allCategories
-    ?.filter((category) => category.parent_id !== null)
+
+  const subcategoryOpts = subcategories
     .map((subcategory) => ({
       label: subcategory.name,
       color: subcategory.color,
@@ -130,12 +143,15 @@ export const HookForm = ({
         },
       })
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to update transaction',
+      })
       console.error(error)
     }
-  }
-
-  if (!accounts || !categories || !subcategories) {
-    return <div>Loading...</div>
+    toast({
+      description: 'Transaction updated successfully',
+    })
   }
 
   return (
@@ -158,7 +174,7 @@ export const HookForm = ({
                         <>
                           <ColorDot
                             color={
-                              accounts?.find(
+                              accountOpts?.find(
                                 (account) => account.id === field.value
                               )?.color as Color
                             }
@@ -166,7 +182,7 @@ export const HookForm = ({
                             type='account'
                           />{' '}
                           {
-                            accounts?.find(
+                            accountOpts?.find(
                               (account) => account.id === field.value
                             )?.label
                           }
@@ -184,7 +200,7 @@ export const HookForm = ({
                     <CommandList>
                       <CommandEmpty>No account found</CommandEmpty>
                       <CommandGroup>
-                        {accounts?.map((account) => (
+                        {accountOpts?.map((account) => (
                           <CommandItem
                             key={account.label}
                             value={account.label}
@@ -214,6 +230,7 @@ export const HookForm = ({
                   </Command>
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -234,7 +251,7 @@ export const HookForm = ({
                         <>
                           <ColorDot
                             color={
-                              subcategories?.find(
+                              subcategoryOpts?.find(
                                 (subcategory) => subcategory.id === field.value
                               )?.color as Color
                             }
@@ -242,7 +259,7 @@ export const HookForm = ({
                             type='account'
                           />{' '}
                           {
-                            subcategories?.find(
+                            subcategoryOpts?.find(
                               (subcategory) => subcategory.id === field.value
                             )?.label
                           }
@@ -260,12 +277,12 @@ export const HookForm = ({
                     <CommandList>
                       <CommandEmpty>No category found</CommandEmpty>
 
-                      {categories?.map((category) => (
+                      {categoryOpts?.map((category) => (
                         <CommandGroup
                           key={category.label}
                           heading={category.label}
                         >
-                          {subcategories
+                          {subcategoryOpts
                             ?.filter(
                               (subcategory) =>
                                 subcategory.parent_id === category.id
@@ -301,6 +318,7 @@ export const HookForm = ({
                   </Command>
                 </PopoverContent>
               </Popover>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -398,17 +416,34 @@ export const HookForm = ({
 
 export const EditTransactionForm = () => {
   const { data: profile } = useGetProfile()
+  const { transaction } = useCurrentTransaction()
+  const { data: accounts } = useGetAccounts()
+  const { data: allCategories } = useGetAllCategories()
   const { mutateAsync: updateTransaction, isPending } = useUpdateTransaction()
+  const { toast } = useToast()
 
-  if (!profile) {
+  if (!profile || !transaction || !accounts || !allCategories) {
     return <div>Loading...</div>
   }
 
+  const categories = allCategories.filter(
+    (category) => !category.parent_id
+  ) as Category[]
+
+  const subcategories = allCategories.filter(
+    (category) => category.parent_id
+  ) as Subcategory[]
+
   return (
     <HookForm
+      transaction={transaction}
       profile={profile}
+      accounts={accounts}
+      categories={categories}
+      subcategories={subcategories}
       updateTransaction={updateTransaction}
       isPending={isPending}
+      toast={toast}
     />
   )
 }

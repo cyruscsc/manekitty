@@ -2,7 +2,7 @@
 
 import { colors } from '@/config/colors'
 import { useCurrentCategory } from '@/hooks/category/current-category'
-import { CategoryUpdate, Profile } from '@/lib/types/tables.types'
+import { Category, CategoryUpdate, Profile } from '@/lib/types/tables.types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -26,6 +26,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useUpdateCategory } from '@/hooks/category/update-category'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -36,19 +37,22 @@ const formSchema = z.object({
 
 interface HookFormProps {
   profile: Profile
+  category: Category
   updateCategory: (params: {
     id: string
     category: CategoryUpdate
   }) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
+  category,
   updateCategory,
   isPending,
+  toast,
 }: HookFormProps) => {
-  const { category } = useCurrentCategory()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,8 +75,15 @@ export const HookForm = ({
         },
       })
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to update category',
+      })
       console.error(error)
     }
+    toast({
+      description: 'Category updated successfully',
+    })
   }
 
   return (
@@ -126,17 +137,21 @@ export const HookForm = ({
 
 export const EditCategoryForm = () => {
   const { data: profile } = useGetProfile()
+  const { category } = useCurrentCategory()
   const { mutateAsync: updateCategory, isPending } = useUpdateCategory()
+  const { toast } = useToast()
 
-  if (!profile) {
+  if (!profile || !category) {
     return <div>Loading...</div>
   }
 
   return (
     <HookForm
       profile={profile}
+      category={category}
       updateCategory={updateCategory}
       isPending={isPending}
+      toast={toast}
     />
   )
 }

@@ -2,7 +2,11 @@
 
 import { colors } from '@/config/colors'
 import { useCurrentSubcategory } from '@/hooks/category/current-subcategory'
-import { Profile, SubcategoryUpdate } from '@/lib/types/tables.types'
+import {
+  Profile,
+  Subcategory,
+  SubcategoryUpdate,
+} from '@/lib/types/tables.types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -19,6 +23,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useUpdateSubcategory } from '@/hooks/category/update-subcategory'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -29,19 +34,22 @@ const formSchema = z.object({
 
 interface HookFormProps {
   profile: Profile
+  subcategory: Subcategory
   updateSubcategory: (params: {
     id: string
     subcategory: SubcategoryUpdate
   }) => Promise<void>
   isPending: boolean
+  toast: ReturnType<typeof useToast>['toast']
 }
 
 export const HookForm = ({
   profile,
+  subcategory,
   updateSubcategory,
   isPending,
+  toast,
 }: HookFormProps) => {
-  const { subcategory } = useCurrentSubcategory()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,8 +72,15 @@ export const HookForm = ({
         },
       })
     } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to update subcategory',
+      })
       console.error(error)
     }
+    toast({
+      description: 'Subcategory updated successfully',
+    })
   }
 
   return (
@@ -95,17 +110,21 @@ export const HookForm = ({
 
 export const EditSubcategoryForm = () => {
   const { data: profile } = useGetProfile()
+  const { subcategory } = useCurrentSubcategory()
   const { mutateAsync: updateSubcategory, isPending } = useUpdateSubcategory()
+  const { toast } = useToast()
 
-  if (!profile) {
+  if (!profile || !subcategory) {
     return <div>Loading...</div>
   }
 
   return (
     <HookForm
       profile={profile}
+      subcategory={subcategory}
       updateSubcategory={updateSubcategory}
       isPending={isPending}
+      toast={toast}
     />
   )
 }
