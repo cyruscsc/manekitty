@@ -26,7 +26,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { CalendarIcon, CheckIcon, ChevronDownIcon } from '@radix-ui/react-icons'
+import { CalendarSearch, Check, ChevronsUpDown, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ColorDot } from '../basics/color-dot'
 import { useGetAccounts } from '@/hooks/account/get-accounts'
@@ -190,7 +190,7 @@ export const HookForm = ({
                       ) : (
                         'Select account'
                       )}{' '}
-                      <ChevronDownIcon />
+                      <ChevronsUpDown />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -215,7 +215,7 @@ export const HookForm = ({
                               type='account'
                             />
                             {account.label}
-                            <CheckIcon
+                            <Check
                               className={cn(
                                 'ml-auto',
                                 field.value === account.id
@@ -267,7 +267,7 @@ export const HookForm = ({
                       ) : (
                         'Select category'
                       )}{' '}
-                      <ChevronDownIcon />
+                      <ChevronsUpDown />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -302,7 +302,7 @@ export const HookForm = ({
                                   type='category'
                                 />
                                 {subcategory.label}
-                                <CheckIcon
+                                <Check
                                   className={cn(
                                     'ml-auto',
                                     field.value === subcategory.id
@@ -387,7 +387,7 @@ export const HookForm = ({
                       className={`${!field.value && 'text-muted-foreground'}`}
                     >
                       {field.value ? format(field.value, 'PP') : 'Pick a date'}{' '}
-                      <CalendarIcon />
+                      <CalendarSearch />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
@@ -407,7 +407,7 @@ export const HookForm = ({
           )}
         />
         <Button type='submit' disabled={isPending}>
-          Save
+          <Save />
         </Button>
       </form>
     </Form>

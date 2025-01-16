@@ -1,5 +1,5 @@
 import { Button } from '../ui/button'
-import { PlusIcon } from '@radix-ui/react-icons'
+import { Plus } from 'lucide-react';
 
 interface AddTransactionButtonProps {
   accountID?: string
@@ -10,7 +10,7 @@ export const AddTransactionButton = ({
 }: AddTransactionButtonProps) => {
   return (
     <Button>
-      <PlusIcon />
+      <Plus />
     </Button>
   )
 }

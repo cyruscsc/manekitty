@@ -29,6 +29,7 @@ import { Button } from '../ui/button'
 import { AccountCreate, Profile } from '@/lib/types/tables.types'
 import { colors } from '@/config/colors'
 import { toast, useToast } from '@/hooks/ui/use-toast'
+import { Save } from 'lucide-react'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -183,7 +184,7 @@ export const HookForm = ({
           )}
         />
         <Button type='submit' disabled={isPending}>
-          Add
+          <Save />
         </Button>
       </form>
     </Form>

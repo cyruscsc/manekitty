@@ -27,6 +27,7 @@ import { Button } from '../ui/button'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useUpdateCategory } from '@/hooks/category/update-category'
 import { useToast } from '@/hooks/ui/use-toast'
+import { Save } from 'lucide-react'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -128,7 +129,7 @@ export const HookForm = ({
           )}
         />
         <Button type='submit' disabled={isPending}>
-          Save
+          <Save />
         </Button>
       </form>
     </Form>

@@ -13,7 +13,7 @@ import { SubcategoryProvider } from '../providers/subcategory-provider'
 import { FormModal } from '../modals/form-modal'
 import { AddSubcategoryForm } from '../forms/add-subcategory-form'
 import { Button } from '../ui/button'
-import { Pencil1Icon, PlusIcon } from '@radix-ui/react-icons'
+import { Pencil, Plus } from 'lucide-react'
 import { EditCategoryForm } from '../forms/edit-category-form'
 
 interface CategoryCardProps {
@@ -47,7 +47,7 @@ export const CategoryCard = ({
             title='Add subcategory'
             trigger={
               <Button>
-                <PlusIcon />
+                <Plus />
               </Button>
             }
             form={<AddSubcategoryForm />}
@@ -56,7 +56,7 @@ export const CategoryCard = ({
             title='Edit category'
             trigger={
               <Button variant='secondary'>
-                <Pencil1Icon />
+                <Pencil />
               </Button>
             }
             form={<EditCategoryForm />}

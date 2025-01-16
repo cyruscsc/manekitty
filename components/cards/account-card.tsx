@@ -13,7 +13,7 @@ import { AccountProvider } from '../providers/account-provider'
 import { DeleteAccountModal } from '../modals/delete-account-modal'
 import { FormModal } from '../modals/form-modal'
 import { Button } from '../ui/button'
-import { Pencil1Icon } from '@radix-ui/react-icons'
+import { Pencil } from 'lucide-react'
 import { EditAccountForm } from '../forms/edit-account-form'
 
 interface AccountCardProps {
@@ -40,7 +40,7 @@ export const AccountCard = ({ account }: AccountCardProps) => {
             title='Edit account'
             trigger={
               <Button variant='secondary'>
-                <Pencil1Icon />
+                <Pencil />
               </Button>
             }
             form={<EditAccountForm />}

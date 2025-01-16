@@ -11,7 +11,7 @@ import {
   AlertDialogTrigger,
 } from '../ui/alert-dialog'
 import { Button } from '../ui/button'
-import { TrashIcon } from '@radix-ui/react-icons'
+import { Trash } from 'lucide-react'
 import { useDeleteAccount } from '@/hooks/account/delete-account'
 import { useToast } from '@/hooks/ui/use-toast'
 
@@ -39,7 +39,7 @@ export const DeleteAccountModal = () => {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant='ghost'>
-          <TrashIcon />
+          <Trash />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
