@@ -52,6 +52,8 @@ import { useState } from 'react'
 import { useCurrentTransaction } from '@/hooks/transaction/current-transaction'
 import { useUpdateTransaction } from '@/hooks/transaction/update-transaction'
 import { useToast } from '@/hooks/ui/use-toast'
+import { useDeleteTransaction } from '@/hooks/transaction/delete-transaction'
+import { DeleteModal } from '../modals/delete-modal'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -73,7 +75,9 @@ interface HookFormProps {
     id: string
     transaction: TransactionUpdate
   }) => Promise<void>
-  isPending: boolean
+  isPendingUpdate: boolean
+  deleteTransaction: (id: string) => Promise<void>
+  isPendingDelete: boolean
   toast: ReturnType<typeof useToast>['toast']
 }
 
@@ -84,7 +88,9 @@ export const HookForm = ({
   categories,
   subcategories,
   updateTransaction,
-  isPending,
+  isPendingUpdate,
+  deleteTransaction,
+  isPendingDelete,
   toast,
 }: HookFormProps) => {
   const accountOpts = accounts
@@ -151,6 +157,21 @@ export const HookForm = ({
     }
     toast({
       description: 'Transaction updated successfully',
+    })
+  }
+
+  const onDelete = async () => {
+    try {
+      await deleteTransaction(transaction.id)
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to delete transaction',
+      })
+      console.error(error)
+    }
+    toast({
+      description: 'Transaction deleted successfully',
     })
   }
 
@@ -406,9 +427,26 @@ export const HookForm = ({
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isPending}>
-          <Save />
-        </Button>
+        <div className='flex gap-2'>
+          <Button
+            type='submit'
+            size='icon'
+            disabled={isPendingUpdate}
+            className='flex-1'
+          >
+            <Save />
+          </Button>
+          <DeleteModal
+            title={`Are you sure to delete ${
+              transaction.note || 'this transaction'
+            }?`}
+            description={`This action cannot be undone. This will permanently delete ${
+              transaction.note || 'this transaction'
+            }.`}
+            onDelete={onDelete}
+            isPending={isPendingDelete}
+          />
+        </div>
       </form>
     </Form>
   )
@@ -419,7 +457,10 @@ export const EditTransactionForm = () => {
   const { transaction } = useCurrentTransaction()
   const { data: accounts } = useGetAccounts()
   const { data: allCategories } = useGetAllCategories()
-  const { mutateAsync: updateTransaction, isPending } = useUpdateTransaction()
+  const { mutateAsync: updateTransaction, isPending: isPendingUpdate } =
+    useUpdateTransaction()
+  const { mutateAsync: deleteTransaction, isPending: isPendingDelete } =
+    useDeleteTransaction()
   const { toast } = useToast()
 
   if (!profile || !transaction || !accounts || !allCategories) {
@@ -436,13 +477,15 @@ export const EditTransactionForm = () => {
 
   return (
     <HookForm
-      transaction={transaction}
       profile={profile}
+      transaction={transaction}
       accounts={accounts}
       categories={categories}
       subcategories={subcategories}
       updateTransaction={updateTransaction}
-      isPending={isPending}
+      isPendingUpdate={isPendingUpdate}
+      deleteTransaction={deleteTransaction}
+      isPendingDelete={isPendingDelete}
       toast={toast}
     />
   )

@@ -28,6 +28,8 @@ import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useUpdateCategory } from '@/hooks/category/update-category'
 import { useToast } from '@/hooks/ui/use-toast'
 import { Save } from 'lucide-react'
+import { useDeleteCategory } from '@/hooks/category/delete-category'
+import { DeleteModal } from '../modals/delete-modal'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -43,7 +45,9 @@ interface HookFormProps {
     id: string
     category: CategoryUpdate
   }) => Promise<void>
-  isPending: boolean
+  isPendingUpdate: boolean
+  deleteCategory: (id: string) => Promise<void>
+  isPendingDelete: boolean
   toast: ReturnType<typeof useToast>['toast']
 }
 
@@ -51,7 +55,9 @@ export const HookForm = ({
   profile,
   category,
   updateCategory,
-  isPending,
+  isPendingUpdate,
+  deleteCategory,
+  isPendingDelete,
   toast,
 }: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,6 +90,21 @@ export const HookForm = ({
     }
     toast({
       description: 'Category updated successfully',
+    })
+  }
+
+  const onDelete = async () => {
+    try {
+      await deleteCategory(category.id)
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to delete category',
+      })
+      console.error(error)
+    }
+    toast({
+      description: 'Category deleted successfully',
     })
   }
 
@@ -128,9 +149,22 @@ export const HookForm = ({
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isPending}>
-          <Save />
-        </Button>
+        <div className='flex gap-2'>
+          <Button
+            type='submit'
+            size='icon'
+            disabled={isPendingUpdate}
+            className='flex-1'
+          >
+            <Save />
+          </Button>
+          <DeleteModal
+            title={`Are you sure to delete ${category.name}?`}
+            description={`This action cannot be undone. This will permanently delete ${category.name} and all its transactions.`}
+            onDelete={onDelete}
+            isPending={isPendingDelete}
+          />
+        </div>
       </form>
     </Form>
   )
@@ -139,7 +173,10 @@ export const HookForm = ({
 export const EditCategoryForm = () => {
   const { data: profile } = useGetProfile()
   const { category } = useCurrentCategory()
-  const { mutateAsync: updateCategory, isPending } = useUpdateCategory()
+  const { mutateAsync: updateCategory, isPending: isPendingUpdate } =
+    useUpdateCategory()
+  const { mutateAsync: deleteCategory, isPending: isPendingDelete } =
+    useDeleteCategory()
   const { toast } = useToast()
 
   if (!profile || !category) {
@@ -151,7 +188,9 @@ export const EditCategoryForm = () => {
       profile={profile}
       category={category}
       updateCategory={updateCategory}
-      isPending={isPending}
+      isPendingUpdate={isPendingUpdate}
+      deleteCategory={deleteCategory}
+      isPendingDelete={isPendingDelete}
       toast={toast}
     />
   )

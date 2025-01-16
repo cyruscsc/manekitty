@@ -38,7 +38,7 @@ export const DeleteAccountModal = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant='ghost'>
+        <Button variant='destructive' size='icon'>
           <Trash />
         </Button>
       </AlertDialogTrigger>

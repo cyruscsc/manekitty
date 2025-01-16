@@ -6,11 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from '../ui/card'
-import { AddTransactionButton } from '../buttons/add-transaction-button'
 import { colors } from '@/config/colors'
 import { ColorDot } from '../basics/color-dot'
 import { AccountProvider } from '../providers/account-provider'
-import { DeleteAccountModal } from '../modals/delete-account-modal'
 import { FormModal } from '../modals/form-modal'
 import { Button } from '../ui/button'
 import { Pencil } from 'lucide-react'
@@ -35,17 +33,15 @@ export const AccountCard = ({ account }: AccountCardProps) => {
           <CardDescription>${account.balance}</CardDescription>
         </CardHeader>
         <CardFooter className='py-0 gap-2'>
-          <AddTransactionButton accountID={account.id} />
           <FormModal
             title='Edit account'
             trigger={
-              <Button variant='secondary'>
+              <Button variant='ghost' size='icon'>
                 <Pencil />
               </Button>
             }
             form={<EditAccountForm />}
           />
-          <DeleteAccountModal />
         </CardFooter>
       </Card>
     </AccountProvider>

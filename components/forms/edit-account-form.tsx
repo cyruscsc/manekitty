@@ -31,6 +31,8 @@ import { useUpdateAccount } from '@/hooks/account/update-account'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useToast } from '@/hooks/ui/use-toast'
 import { Save } from 'lucide-react'
+import { DeleteModal } from '../modals/delete-modal'
+import { useDeleteAccount } from '@/hooks/account/delete-account'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -48,7 +50,9 @@ interface HookFormProps {
     id: string
     account: AccountUpdate
   }) => Promise<void>
-  isPending: boolean
+  isPendingUpdate: boolean
+  deleteAccount: (id: string) => Promise<void>
+  isPendingDelete: boolean
   toast: ReturnType<typeof useToast>['toast']
 }
 
@@ -56,7 +60,9 @@ export const HookForm = ({
   profile,
   account,
   updateAccount,
-  isPending,
+  isPendingUpdate,
+  deleteAccount,
+  isPendingDelete,
   toast,
 }: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -93,6 +99,21 @@ export const HookForm = ({
     }
     toast({
       description: 'Account updated successfully',
+    })
+  }
+
+  const onDelete = async () => {
+    try {
+      await deleteAccount(account.id)
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to delete account',
+      })
+      console.error(error)
+    }
+    toast({
+      description: 'Account deleted successfully',
     })
   }
 
@@ -192,9 +213,22 @@ export const HookForm = ({
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isPending}>
-          <Save />
-        </Button>
+        <div className='flex gap-2'>
+          <Button
+            type='submit'
+            size='icon'
+            disabled={isPendingUpdate}
+            className='flex-1'
+          >
+            <Save />
+          </Button>
+          <DeleteModal
+            title={`Are you sure to delete ${account.name}?`}
+            description={`This action cannot be undone. This will permanently delete ${account.name} and all its transactions.`}
+            onDelete={onDelete}
+            isPending={isPendingDelete}
+          />
+        </div>
       </form>
     </Form>
   )
@@ -203,7 +237,10 @@ export const HookForm = ({
 export const EditAccountForm = () => {
   const { data: profile } = useGetProfile()
   const { account } = useCurrentAccount()
-  const { mutateAsync: updateAccount, isPending } = useUpdateAccount()
+  const { mutateAsync: updateAccount, isPending: isPendingUpdate } =
+    useUpdateAccount()
+  const { mutateAsync: deleteAccount, isPending: isPendingDelete } =
+    useDeleteAccount()
   const { toast } = useToast()
 
   if (!profile || !account) {
@@ -215,7 +252,9 @@ export const EditAccountForm = () => {
       profile={profile}
       account={account}
       updateAccount={updateAccount}
-      isPending={isPending}
+      isPendingUpdate={isPendingUpdate}
+      deleteAccount={deleteAccount}
+      isPendingDelete={isPendingDelete}
       toast={toast}
     />
   )

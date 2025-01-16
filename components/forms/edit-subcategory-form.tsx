@@ -25,6 +25,8 @@ import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useUpdateSubcategory } from '@/hooks/category/update-subcategory'
 import { useToast } from '@/hooks/ui/use-toast'
 import { Save } from 'lucide-react'
+import { useDeleteSubcategory } from '@/hooks/category/delete-subcategory'
+import { DeleteModal } from '../modals/delete-modal'
 
 const formSchema = z.object({
   userId: z.string(),
@@ -40,7 +42,9 @@ interface HookFormProps {
     id: string
     subcategory: SubcategoryUpdate
   }) => Promise<void>
-  isPending: boolean
+  isPendingUpdate: boolean
+  deleteSubcategory: (id: string) => Promise<void>
+  isPendingDelete: boolean
   toast: ReturnType<typeof useToast>['toast']
 }
 
@@ -48,7 +52,9 @@ export const HookForm = ({
   profile,
   subcategory,
   updateSubcategory,
-  isPending,
+  isPendingUpdate,
+  deleteSubcategory,
+  isPendingDelete,
   toast,
 }: HookFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,6 +90,21 @@ export const HookForm = ({
     })
   }
 
+  const onDelete = async () => {
+    try {
+      await deleteSubcategory(subcategory.id)
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        description: 'Failed to delete subcategory',
+      })
+      console.error(error)
+    }
+    toast({
+      description: 'Subcategory deleted successfully',
+    })
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -101,9 +122,22 @@ export const HookForm = ({
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isPending}>
-          <Save />
-        </Button>
+        <div className='flex gap-2'>
+          <Button
+            type='submit'
+            size='icon'
+            disabled={isPendingUpdate}
+            className='flex-1'
+          >
+            <Save />
+          </Button>
+          <DeleteModal
+            title={`Are you sure to delete ${subcategory.name}?`}
+            description={`This action cannot be undone. This will permanently delete ${subcategory.name} and all its transactions.`}
+            onDelete={onDelete}
+            isPending={isPendingDelete}
+          />
+        </div>
       </form>
     </Form>
   )
@@ -112,7 +146,10 @@ export const HookForm = ({
 export const EditSubcategoryForm = () => {
   const { data: profile } = useGetProfile()
   const { subcategory } = useCurrentSubcategory()
-  const { mutateAsync: updateSubcategory, isPending } = useUpdateSubcategory()
+  const { mutateAsync: updateSubcategory, isPending: isPendingUpdate } =
+    useUpdateSubcategory()
+  const { mutateAsync: deleteSubcategory, isPending: isPendingDelete } =
+    useDeleteSubcategory()
   const { toast } = useToast()
 
   if (!profile || !subcategory) {
@@ -124,7 +161,9 @@ export const EditSubcategoryForm = () => {
       profile={profile}
       subcategory={subcategory}
       updateSubcategory={updateSubcategory}
-      isPending={isPending}
+      isPendingUpdate={isPendingUpdate}
+      deleteSubcategory={deleteSubcategory}
+      isPendingDelete={isPendingDelete}
       toast={toast}
     />
   )
