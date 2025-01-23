@@ -1,12 +1,12 @@
 'use client'
 
-import { currencies, themes } from '@/config/enums'
+import { themes } from '@/config/enums'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useUpdateProfile } from '@/hooks/profile/update-profile'
-import { Currency, Theme } from '@/lib/types/enums.types'
+import { Theme } from '@/lib/types/enums.types'
 import {
   Form,
   FormControl,
@@ -26,12 +26,11 @@ import {
   SelectValue,
 } from '../ui/select'
 import { Profile, ProfileUpdate } from '@/lib/types/tables.types'
-import { toast, useToast } from '@/hooks/ui/use-toast'
+import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   displayName: z.string().min(2).max(16),
   theme: z.enum(themes as [string, ...string[]]),
-  currency: z.enum(currencies as [string, ...string[]]),
 })
 
 interface HookFormProps {
@@ -52,7 +51,6 @@ const HookForm = ({
     defaultValues: {
       displayName: profile.display_name ?? '',
       theme: profile.theme,
-      currency: profile.currency,
     },
   })
 
@@ -63,7 +61,6 @@ const HookForm = ({
         profile: {
           display_name: data.displayName,
           theme: data.theme as Theme,
-          currency: data.currency as Currency,
         },
       })
     } catch (error) {
@@ -111,30 +108,6 @@ const HookForm = ({
                   {themes.map((theme) => (
                     <SelectItem key={theme} value={theme}>
                       {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='currency'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Currency</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Select a currency' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {currencies.map((currency) => (
-                    <SelectItem key={currency} value={currency}>
-                      {currency.charAt(0).toUpperCase() + currency.slice(1)}
                     </SelectItem>
                   ))}
                 </SelectContent>

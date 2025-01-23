@@ -1,7 +1,6 @@
 'use client'
 
-import { transactionTypes } from '@/config/enums'
-import { Color, TransactionType } from '@/lib/types/enums.types'
+import { Color } from '@/lib/types/enums.types'
 import {
   Profile,
   TransactionCreate,
@@ -25,12 +24,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { useGetProfile } from '@/hooks/profile/get-profile'
 import { useCreateTransaction } from '@/hooks/transaction/create-transaction'
-import {
-  Popover,
-  PopoverClose,
-  PopoverContent,
-  PopoverTrigger,
-} from '../ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { CalendarSearch, Check, ChevronsUpDown, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ColorDot } from '../basics/color-dot'
@@ -44,13 +38,6 @@ import {
   CommandList,
 } from '../ui/command'
 import { useGetAllCategories } from '@/hooks/category/get-all-categories'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select'
 import { Calendar } from '../ui/calendar'
 import { format } from 'date-fns'
 import { useState } from 'react'
@@ -58,9 +45,8 @@ import { useToast } from '@/hooks/ui/use-toast'
 
 const formSchema = z.object({
   userId: z.string(),
-  accountId: z.string(),
+  fromAccountId: z.string(),
   categoryId: z.string(),
-  type: z.enum(transactionTypes as [string, ...string[]]),
   amount: z.coerce.number(),
   note: z.string().max(80).optional(),
   date: z.date(),
@@ -113,9 +99,8 @@ export const HookForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       userId: profile.id as string,
-      accountId: '',
+      fromAccountId: '',
       categoryId: '',
-      type: '',
       amount: 0,
       note: '',
       date: new Date(),
@@ -130,9 +115,8 @@ export const HookForm = ({
     try {
       await createTransaction({
         user_id: data.userId,
-        account_id: data.accountId,
+        from_account_id: data.fromAccountId,
         category_id: data.categoryId,
-        type: data.type as TransactionType,
         amount: data.amount,
         note: data.note,
         date: data.date.toISOString().split('T')[0],
@@ -154,7 +138,7 @@ export const HookForm = ({
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name='accountId'
+          name='fromAccountId'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Account</FormLabel>
@@ -204,7 +188,7 @@ export const HookForm = ({
                             key={account.label}
                             value={account.label}
                             onSelect={() => {
-                              form.setValue('accountId', account.id)
+                              form.setValue('fromAccountId', account.id)
                               setAccountOpen(false)
                             }}
                           >
@@ -321,30 +305,6 @@ export const HookForm = ({
                   </Command>
                 </PopoverContent>
               </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='type'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Type</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Select a type' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {transactionTypes.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}
